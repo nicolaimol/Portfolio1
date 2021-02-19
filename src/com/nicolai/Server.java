@@ -72,7 +72,6 @@ class ServerSocketSendingThread extends Thread {
     }
 }
 
-/*
 class ServerSocketReadingSocket extends Thread {
     Socket socket;
     List<Socket> socketList;
@@ -82,6 +81,14 @@ class ServerSocketReadingSocket extends Thread {
         this.socketList = socketList;
     }
 
+    public void send(Socket socketInn, String msg, String username) {
+        for (Socket socket : socketList) {
+            if (socketInn != socket) {
+                SocketUtil.send(socket, msg, username);
+            }
+        }
+    }
+
 
     @Override
     public synchronized void run() {
@@ -89,11 +96,8 @@ class ServerSocketReadingSocket extends Thread {
         try {
             socketList.remove(socketRead);
             socketRead.close();
-            this.stop();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 }
-
- */

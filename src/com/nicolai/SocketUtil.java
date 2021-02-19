@@ -50,7 +50,7 @@ public class SocketUtil {
 
     public static Socket read(Socket socket, ServerSocketReadingSocket readingSocket) {
         while (true) {
-            
+
             try {
 
                 String input = readPrivate(socket);
@@ -59,7 +59,7 @@ public class SocketUtil {
                 }
 
                 String[] inputArray = input.split(":");
-                readingSocket.send(socket, inputArray[1], inputArray[0].trim());
+                readingSocket.send(socket, inputArray[1].trim(), inputArray[0]);
 
                 System.out.println(input);
 

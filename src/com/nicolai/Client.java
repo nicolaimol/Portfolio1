@@ -60,6 +60,13 @@ class ClientThread extends Thread {
         String in;
         while (true) {
             in = scanner.nextLine();
+            if (in.equals("quit")) {
+                try {
+                    socket.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
             SocketUtil.send(socket, in, username);
 
         }
