@@ -29,17 +29,18 @@ public class SocketUtil {
         return input;
     }
 
-    public static Socket read(Socket socket) {
+    public static String readClient(Socket socket) {
         while (true) {
 
             try {
 
                 String input = readPrivate(socket);
                 if (input == null) {
-                    return socket;
+                    return "Close";
                 }
 
                 System.out.println(input);
+                return input;
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -48,7 +49,7 @@ public class SocketUtil {
         }
     }
 
-    public static Socket read(Socket socket, ServerSocketReadingSocket readingSocket) {
+    public static Socket readServer (Socket socket, ServerSocketReadingSocket readingSocket) {
         while (true) {
 
             try {

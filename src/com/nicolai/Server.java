@@ -92,10 +92,11 @@ class ServerSocketReadingSocket extends Thread {
 
     @Override
     public synchronized void run() {
-        Socket socketRead = SocketUtil.read(socket, this);
+        Socket socketRead = SocketUtil.readServer(socket, this);
         try {
             socketList.remove(socketRead);
             socketRead.close();
+            System.out.println(socketRead.toString() + " closed");
         } catch (IOException e) {
             e.printStackTrace();
         }
