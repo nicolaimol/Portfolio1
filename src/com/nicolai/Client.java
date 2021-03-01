@@ -2,6 +2,7 @@ package com.nicolai;
 
 import java.io.*;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -55,11 +56,13 @@ public class Client {
                     ClientThread client = new ClientThread(socket, username);
                     client.start();
                     while (true) {
+
                         String input = SocketUtil.readClient(socket);
                         if (input.equals("Close")) {
                             System.out.println("Connection closed");
                             return;
                         }
+
                     }
             }
 
@@ -94,7 +97,7 @@ class ClientThread extends Thread {
                 try {
                     socket.close();
                     return;
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }

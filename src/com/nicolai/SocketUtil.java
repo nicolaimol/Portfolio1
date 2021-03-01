@@ -22,6 +22,7 @@ public class SocketUtil {
     }
 
     private static String readPrivate(Socket socket) throws IOException {
+
         InputStream inputStream = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -43,7 +44,8 @@ public class SocketUtil {
                 return input;
 
             } catch (IOException e) {
-                e.printStackTrace();
+                return "Close";
+                //e.printStackTrace();
             }
 
         }
