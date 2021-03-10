@@ -2,5 +2,7 @@
 
 cd src
 
-javac com/nicolai/Client.java
-java com/nicolai/Client localhost 8081 $1
+javac Client.java -d ../out/production/Portfolio1
+
+cd ../out/production/Portfolio1
+java Client localhost 8081 $1

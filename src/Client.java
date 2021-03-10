@@ -1,11 +1,9 @@
-package com.nicolai;
-
 import java.io.*;
 import java.net.Socket;
-import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Arrays;
 import java.util.Scanner;
+import java.util.Vector;
 
 public class Client {
 
@@ -18,7 +16,7 @@ public class Client {
         String username = args[2];
         ClientEnum clientEnum;
 
-        String[] bot = {"testBot"};
+        String[] bot = {"testBot", "Erik"};
         if (Arrays.asList(bot).contains(username)) {
             clientEnum = ClientEnum.BOT;
         } else {
@@ -27,23 +25,27 @@ public class Client {
 
         // Starting the connection to the socket
         try (Socket socket = new Socket(hostname, port)) {
+            SocketUtilClient.send(socket, "", username);
             switch (clientEnum) {
                 // Code for handling writing for bot
                 case BOT:
                     System.out.println("Bot");
                     while (true) {
-                        String input = SocketUtil.readClient(socket);
+                        String input = SocketUtilClient.readClient(socket);
                         if (input.equals("Close")) {
                             System.out.println("Connection closed");
                             return;
                         }
 
-                        //System.out.println(Arrays.toString(inputArray));
+                        String msg = switch (username) {
+                            case "testBot" -> ClientBot.testBot(input);
+                            case "Erik" -> ClientBot.botErik(input);
+                            default -> null;
+                        };
 
-                        String msg = Bot.testBot(input);
                         if (msg != null) {
 
-                            SocketUtil.send(socket, msg, username);
+                            SocketUtilClient.send(socket, msg, username);
                             System.out.println("Message sent");
 
                         }
@@ -57,9 +59,10 @@ public class Client {
                     client.start();
                     while (true) {
 
-                        String input = SocketUtil.readClient(socket);
+                        String input = SocketUtilClient.readClient(socket);
                         if (input.equals("Close")) {
                             System.out.println("Connection closed");
+                            System.exit(0);
                             return;
                         }
 
@@ -78,9 +81,9 @@ public class Client {
 }
 
 class ClientThread extends Thread {
-    private Socket socket;
-    private Scanner scanner;
-    private String username;
+    private final Socket socket;
+    private final Scanner scanner;
+    private final String username;
 
     public ClientThread(Socket socket, String username) {
         this.socket = socket;
@@ -101,35 +104,53 @@ class ClientThread extends Thread {
                     e.printStackTrace();
                 }
             }
-            SocketUtil.send(socket, in, username);
+            SocketUtilClient.send(socket, in, username);
 
         }
     }
 }
 
 enum ClientEnum {
-    USER, BOT;
+    USER, BOT
 }
 
-class Bot {
+class ClientBot {
 
     private static String[] makeArray (String input) {
-        return input.split(" ");
+        return input.split(":");
     }
 
 
     public static String testBot(String input) {
         String[] inputArray = makeArray(input);
 
-        if (inputArray[0].equals("Server:")) {
+        if (inputArray[0].equals("Server")) {
             //System.out.println("Message received from server");
             try {
                 Thread.sleep(1000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            return "I would love to " + inputArray[5];
+            String[] suggestions = Test.findAction(input);
+
+            return "I would love to " + suggestions[0] + " " + suggestions[1];
+        }
+        return null;
+    }
+
+    public static String botErik(String input) {
+        String[] inputArray = makeArray(input);
+
+        if (inputArray[0].equals("Server")) {
+            try {
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return "I don't want to do that ):";
         }
         return null;
     }
 }
+

@@ -1,11 +1,7 @@
-package com.nicolai;
-
 import java.io.*;
 import java.net.Socket;
-import java.util.List;
-import com.nicolai.ServerSocketReadingSocket;
 
-public class SocketUtil {
+public class SocketUtilClient {
 
     public static void send(Socket socket, String msg, String username) {
         OutputStream output = null;
@@ -13,7 +9,7 @@ public class SocketUtil {
             output = socket.getOutputStream();
 
             PrintWriter writer = new PrintWriter(output, true);
-            BufferedWriter bufferedWriter = new BufferedWriter(writer);
+            //BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
             writer.println(username + ": " + msg);
         } catch (IOException e) {
@@ -26,8 +22,13 @@ public class SocketUtil {
         InputStream inputStream = socket.getInputStream();
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
-        String input = reader.readLine();
-        return input;
+        try {
+            String input = reader.readLine();
+            return input;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     public static String readClient(Socket socket) {
@@ -40,7 +41,7 @@ public class SocketUtil {
                     return "Close";
                 }
 
-                System.out.println(input);
+                System.out.println("\n" + input);
                 return input;
 
             } catch (IOException e) {
@@ -51,26 +52,5 @@ public class SocketUtil {
         }
     }
 
-    public static Socket readServer (Socket socket, ServerSocketReadingSocket readingSocket) {
-        while (true) {
-
-            try {
-
-                String input = readPrivate(socket);
-                if (input == null) {
-                    return socket;
-                }
-
-                String[] inputArray = input.split(":");
-                readingSocket.send(socket, inputArray[1].trim(), inputArray[0]);
-
-                System.out.println(input);
-
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-        }
-    }
 
 }
