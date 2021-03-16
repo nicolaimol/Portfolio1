@@ -1,3 +1,4 @@
+
 import java.io.*;
 import java.net.Socket;
 
@@ -9,7 +10,6 @@ public class SocketUtilClient {
             output = socket.getOutputStream();
 
             PrintWriter writer = new PrintWriter(output, true);
-            //BufferedWriter bufferedWriter = new BufferedWriter(writer);
 
             writer.println(username + ": " + msg);
         } catch (IOException e) {
@@ -23,8 +23,7 @@ public class SocketUtilClient {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
 
         try {
-            String input = reader.readLine();
-            return input;
+            return reader.readLine();
         } catch (Exception e) {
             return null;
         }
@@ -41,7 +40,7 @@ public class SocketUtilClient {
                     return "Close";
                 }
 
-                System.out.println("\n" + input);
+                System.out.println("\r" + input);
                 return input;
 
             } catch (IOException e) {
