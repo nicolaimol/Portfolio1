@@ -60,10 +60,17 @@ public class Client {
                             SocketUtilClient.send(socket, msg, username);
                             System.out.println("Message sent");
 
-                            if (input.split("[:]")[0].equals("Server") && WordAnalysing.findAction(input)[0].equals("okay")) {
-                                socket.close();
-                                return;
+                            try {
+                                if (input.split("[:]")[0].equals("Server") && input.toLowerCase().contains("okay")) {
+                                    if (WordAnalysing.findAction(input)[0].equals("okay")) {
+                                        socket.close();
+                                        return;
+                                    }
+                                }
+                            } catch (Exception ignored) {
+
                             }
+
                             if (msg.equals("bye") || msg.equalsIgnoreCase("bye guys") || msg.equals("hasta luego")) {
                                 socket.close();
                                 return;
