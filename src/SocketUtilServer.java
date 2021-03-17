@@ -2,6 +2,7 @@
 import java.io.*;
 import java.net.Socket;
 import java.util.Arrays;
+import java.util.stream.Collectors;
 
 public class SocketUtilServer {
 
@@ -32,11 +33,18 @@ public class SocketUtilServer {
                     return socket;
                 }
 
-                if (input.contains("fuck")) {
+                if (input.toLowerCase().contains("fuck")) {
+                    readingSocket.socketList.forEach((key, value) -> {
+
+                        if (socket == value) {
+                            System.out.println(key + " was kicked for bad behaviour");
+                            readingSocket.send(socket, key + " was kicked for bad behaviour", "Server");
+                        }
+                    });
                     readingSocket.kickUser(socket);
                     continue;
-
                 }
+
                 String[] message = input.split("[:]");
                 readingSocket.send(socket, message[1].trim(), message[0]);
 

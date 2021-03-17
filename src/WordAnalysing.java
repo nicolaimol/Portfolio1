@@ -57,6 +57,12 @@ public class WordAnalysing {
         String[] sentence = action.split(" ");
 
         if (sentence.length == 1) {
+            if (sentence[0].equals("sup")) {
+                return new String[]{"greeting", "whats up"};
+            }
+            if (sentence[0].toLowerCase().contains("okay") || sentence[0].toLowerCase().contains("oki")) {
+                return new String[]{"okay"};
+            }
             return new String[]{"greeting", "hi"};
         } if (sentence.length == 2) {
             if (action.contains("hey") || action.contains("Hey")) {
@@ -64,6 +70,12 @@ public class WordAnalysing {
             }
             if (sentence[0].equalsIgnoreCase("whats") && sentence[1].equalsIgnoreCase("up")) {
                 return new String[]{"greeting", "whats up"};
+            }
+            if (sentence[0].equalsIgnoreCase("bye")) {
+                return new String[]{"bye", sentence[1]};
+            }
+            if (sentence[0].equalsIgnoreCase("okay") || sentence[0].equalsIgnoreCase("oki")) {
+                return new String[]{"okay"};
             }
         }
 
