@@ -30,6 +30,7 @@ public class SocketUtilServer {
                     input = readPrivate(socket);
                 }
                 if (input == null) {
+                    readingSocket.setRun(false);
                     return socket;
                 }
 

@@ -13,7 +13,10 @@ public class Client {
                     "2. port number\n" +
                     "3. username (Erik, Groom, Jose are used ass bots)\n" +
                     "end with --verbose to se the dynamic behind the bots answers");
+            return;
         }
+
+
 
         if (args.length < 3) return;
 
@@ -56,11 +59,12 @@ public class Client {
 
                             SocketUtilClient.send(socket, msg, username);
                             System.out.println("Message sent");
-                            if (WordAnalysing.findAction(input)[0].equals("okay")) {
+
+                            if (input.split("[:]")[0].equals("Server") && WordAnalysing.findAction(input)[0].equals("okay")) {
                                 socket.close();
                                 return;
                             }
-                            if (msg.equals("bye") || msg.equalsIgnoreCase("buy guys") || msg.equals("hasta luego")) {
+                            if (msg.equals("bye") || msg.equalsIgnoreCase("bye guys") || msg.equals("hasta luego")) {
                                 socket.close();
                                 return;
                             }
@@ -145,23 +149,29 @@ class ClientBot {
     public static String botJaneDoe(String input, boolean print) {
         String[] inputArray = makeArray(input);
 
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
         if (inputArray[0].equals("Server")) {
             //System.out.println("Message received from server");
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
 
             String[] suggestions = WordAnalysing.findAction(input);
-            if (print) System.out.println(Arrays.toString(suggestions));
 
+            if (print) System.out.println(Arrays.toString(suggestions));
+            if (suggestions[0] == null) {
+                return null;
+            }
             if (suggestions[0].equals("okay")) {
                 return "Okay bye";
             }
 
-            if (suggestions[0].equals("bye") && suggestions[1].equalsIgnoreCase("testBot")) {
-                return "bye";
+            if (suggestions[0].equals("bye")) {
+                if (suggestions[1].equalsIgnoreCase("JaneDoe"))
+                    return "bye";
+                else return null;
             }
 
             if (suggestions[0].equals("greeting")) {
@@ -173,7 +183,41 @@ class ClientBot {
                 }
             }
 
-            return "I would love to " + suggestions[0] + " " + suggestions[1];
+            if (suggestions.length == 2) {
+                int randomNumber = random.nextInt(4);
+                return switch (randomNumber) {
+                    case 0 -> "That sounds lovely. Lets go " + suggestions[0] + "ing";
+                    case 1 -> "Yes i want to do that";
+                    case 2 -> "I would really like to " + suggestions[0] + " " + suggestions[1];
+                    case 3 -> suggestions[0] + "ing" + suggestions[1] + " would be the best day this week by far";
+                    default -> "Yes please";
+                };
+            }
+            if (suggestions.length == 5) {
+                if (suggestions[4].equals("or")) {
+                    int randomNumber = random.nextInt(2);
+                    return switch (randomNumber) {
+                        case 0 -> "Hmmmm, maybe " + suggestions[0] + "ing " + suggestions[1];
+                        case 1 -> "Ehm, we could " + suggestions[2] + " " + suggestions[3];
+                        default -> "I really cant decide what i want the most";
+                    };
+                }
+                if (suggestions[4].equals("and")) {
+                    int randomNumber = random.nextInt(2);
+                    return switch (randomNumber) {
+                        case 0 -> "YES YES YES VAMOS";
+                        case 1 -> suggestions[2] + "ing " + suggestions[3] + " is the best to do when you are " +
+                                suggestions[0] + "ing " + suggestions[1];
+                        default -> "I really cant decide what i want the most";
+                    };
+                }
+            }
+
+        }
+        if (inputArray[0].equals("Erik")) {
+            if (inputArray[1].contains("JOSE")) {
+                return "Be nice Erik";
+            }
         }
         return null;
     }
@@ -192,8 +236,10 @@ class ClientBot {
 
         if (inputArray[0].equals("Server") && actions[0] != null) {
 
-            if (actions[0].equals("bye") && actions[1].equalsIgnoreCase("erik")) {
-                return "bye guys";
+            if (actions[0].equals("bye") ) {
+                if (actions[1].equalsIgnoreCase("erik"))
+                    return "bye guys";
+                else return null;
             }
 
             if (actions[0].equals("okay")) {
@@ -242,11 +288,20 @@ class ClientBot {
             }
 
 
-
+        }
+        if (inputArray[0].equals("Groom")) {
+            if (inputArray[1].contains("Erik")) {
+                return "Oh shut up Groom";
+            }
         }
         if (inputArray[0].equals("Jose")) {
             if (inputArray[1].trim().equals("¡Español por favor!")) {
                 return "NO HABLO EPSAÑOL JOSE\uD83E\uDD2C";
+            }
+        }
+        if (inputArray[0].equals("JaneDoe")) {
+            if (inputArray[1].contains("Erik")) {
+                return "I'm sorry Jose";
             }
         }
         return null;
@@ -285,8 +340,10 @@ class ClientBot {
                     }
                 }
 
-                if (actions[0].equals("bye") && actions[1].equalsIgnoreCase("groom")) {
-                    return "bye";
+                if (actions[0].equals("bye")) {
+                    if (actions[1].equalsIgnoreCase("groom"))
+                        return "bye";
+                    else return null;
                 }
 
 
@@ -354,9 +411,9 @@ class ClientBot {
             }
 
         }
-        else if (inputArray[0].equals("Erik") && inputArray[1].contains("I don't")) {
-            int random1 = random.nextInt(10);
-            return random1 < 9 ? null : "You are so negative Erik";
+        else if (inputArray[0].equals("Erik") && (inputArray[1].contains("don't") || inputArray[1].contains("shit"))) {
+            int random1 = random.nextInt(8);
+            return random1 < 5 ? null : "You are so negative Erik";
         }
 
         return null;
@@ -372,6 +429,12 @@ class ClientBot {
             Thread.sleep(5000);
         } catch (InterruptedException ignored) {
 
+        }
+
+        if (inputArray[0].equals("JaneDoe")) {
+            if (inputArray[1].contains("VAMOS")) {
+                return "Eyyy español, vamos vamos";
+            }
         }
 
         if (!inputArray[0].equals("Server")) {
@@ -390,9 +453,12 @@ class ClientBot {
             return "¿no mucho, que tal tu?";
         }
 
-        if (actionsArray[0].equals("bye") && actionsArray[1].equalsIgnoreCase("jose")) {
-            return "Hasta luego chicos";
+        if (actionsArray[0].equals("bye")) {
+            if (actionsArray[1].equalsIgnoreCase("jose"))
+                return "Hasta luego chicos";
+            return null;
         }
+
 
         else {
             int next = random.nextInt(4);

@@ -111,13 +111,15 @@ class ServerSocketSendingThread extends Thread {
                 if (print) System.out.println(Arrays.toString(users));
                 try {
                     // getting socket based on user input username
-                    Socket socket = socketMap.get(users[1]);
+                    Socket socket = socketMap.get(users[1].trim());
                     if (socket != null) {
                         // if socket is found it is closed and removed
                         socketMap.get(users[1]).close();
                         socketMap.remove(users[1]);
                         continue;
                     }
+                    System.out.println("user not found");
+                    continue;
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -136,20 +138,17 @@ class ServerSocketSendingThread extends Thread {
                 }
 
                 // closing all thread
-                for (Socket socket: socketMap.values()) {
+                Iterator<Socket> iterator = socketMap.values().iterator();
+                while (iterator.hasNext()) {
+                    Socket socket = iterator.next();
                     try {
                         socket.close();
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
+                socketMap.clear();
                 if (print) System.out.println("Sockets closed");
-                try {
-                    // stopping server from listening
-                    Server.serverSocketStatic.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
                 // stopping program
                 System.exit(0);
                 return;
@@ -185,7 +184,6 @@ class ServerSocketReadingThread extends Thread {
     // methode for kicking user, and closing socket.
     public void kickUser(Socket socket) {
         try {
-
             socket.close();
             socketList.values().remove(socket);
         } catch (IOException e) {
@@ -219,7 +217,7 @@ class ServerSocketReadingThread extends Thread {
             if (socketRead != null) {
                 socketRead.close();
                 socketList.values().remove(socketRead);
-                if (print) System.out.println(socketRead.toString() + " closed");
+                if (print && !run.get()) System.out.println(socketRead.toString() + " closed");
             }
 
         } catch (IOException e) {

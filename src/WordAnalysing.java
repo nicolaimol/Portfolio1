@@ -53,6 +53,7 @@ public class WordAnalysing {
     private static String[] findAction(String input, boolean and) {
         input = input.replace("[?.,-!]", "");
         String user = input.split(":")[0];
+        if (!user.equals("Server")) return new String[]{null, ""};
         String action = input.split(":")[1].trim();
         String[] sentence = action.split(" ");
 
